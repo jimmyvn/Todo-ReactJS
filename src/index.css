@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;1,300&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 20px;
+  justify-content: space-between;
+}
+
+.navbar .left-navbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar .left-navbar .brand-name {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.navbar .navbar-icon {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+}
+
+.navbar .nav-items {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+.navbar .nav-items .nav-item-link {
+  color: rgb(34, 33, 26);
+  border-radius: 5px;
+  padding: 10px;
+  text-decoration: none;
+  transition: all .3s;
+}
+
+.navbar .nav-items .nav-item-link:hover {
+  background-color: rgb(215, 215, 215);
+  color: rgb(34, 33, 26);
+  text-decoration: none;
+  transition: all .3s;
+}
+
+.task-item {
+  display: flex;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.task-item .task-title {
+  width: 100%;
+}
+
+.task-item input.task-input {
+  border: none;
+  width: 100%;
+  padding:  5px;
+}
+
+.task-item input.task-input:focus {
+  border-color: red;
+}
+
+.todo-list-parent {
+  width: 60%;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.boxes {
+  display: flex;
+  gap: 10px;
+}
+
+.boxes .Box {
+  height: 100px;
+  width: 100px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
