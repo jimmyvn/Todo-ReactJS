@@ -84,12 +84,12 @@ const TodoList = () => {
             x
           </a>
         </div>
-        <div className="task-title">
+        <div className="task-title form-input">
           <input
             type="text"
             name={`task-title-${task.taskId}`}
             value={task.title}
-            className="task-input"
+            className="task-input default-input"
             id={task.taskId}
             onChange={handleChangeTaskTitle}
           />
@@ -114,12 +114,11 @@ const TodoList = () => {
       <div className="add-task">
         <form onSubmit={handleSubmitAddTaskForm}>
           <div className="form-input">
-            <label htmlFor="title">Task Title</label>
+            <label htmlFor="title" className="required">Task Title</label>
             <input
               type="text"
               name="title"
               value={formData.title}
-              id="title"
               onChange={handleChangeAddTask}
               className="default-input"
             />
