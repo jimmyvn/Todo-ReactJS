@@ -29,10 +29,10 @@ const TodoList = () => {
   })
 
   const handleChangeStatus = (event) => {
-    const {name, type, value} = event.target
+    const {name} = event.target
     setFormData(prevFormData => ({
       ...prevFormData,
-      [name]: value === 'on'
+      [name]: !prevFormData.isFinished
     }))
   }
 
@@ -40,7 +40,8 @@ const TodoList = () => {
     event.preventDefault()
 
     if (formData.title.length === 0) {
-      return;
+      console.log('The title must be not empty')
+      return
     }
 
     setTasksList(prevTasks => {
@@ -69,7 +70,7 @@ const TodoList = () => {
   const handleRemoveTask = (taskId) => {
     setTasksList(prevTasks => {
       return prevTasks.filter(task => task.taskId !== taskId)
-    });
+    })
   }
 
   const tasksListELements = tasksList.map((task) => {
@@ -80,7 +81,7 @@ const TodoList = () => {
             href="#"
             onClick={() => handleRemoveTask(task.taskId)}
           >
-            [x]
+            x
           </a>
         </div>
         <div className="task-title">
@@ -131,10 +132,12 @@ const TodoList = () => {
               id="isFinished"
               onChange={handleChangeStatus}
             />
-            <label htmlFor="isFinished">Task Status</label>
+            <label htmlFor="isFinished">
+              Task Status
+            </label>
           </div>
           <button
-            className="add-task-btn"
+            className="btn btn-secondary"
           >
             Add Task
           </button>
