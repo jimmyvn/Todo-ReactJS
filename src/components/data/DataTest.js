@@ -21,10 +21,14 @@ export const tasks = [
     isFinished: true,
   }, {
     taskId: 6,
+    title: 'Using the STATE in React',
+    isFinished: false,
+  }, {
+    taskId: 7,
     title: 'Custom Styling in React',
     isFinished: true,
   }, {
-    taskId: 7,
+    taskId: 8,
     title: 'Implement TODO List app',
     isFinished: false,
   },

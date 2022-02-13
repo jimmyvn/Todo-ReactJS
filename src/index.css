@@ -80,7 +80,7 @@ code {
 }
 
 .todo-list-parent {
-  width: 60%;
+  width: 50%;
   margin: 0 auto;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -99,4 +99,18 @@ code {
   border: 1px solid #000;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.form-input .default-input {
+  width: 100%;
+  padding:  5px;
+  margin-top: 10px;
+}
+
+.form-input {
+  margin: 10px 0;
+}
+
+.add-task {
+  border-top: 1px solid #ddd;
 }

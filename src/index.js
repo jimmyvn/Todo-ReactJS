@@ -10,9 +10,8 @@ import './index.css'
 ReactDOM.render(
   <React.StrictMode>
     <Navbar />
-    <div className="todo-list-parent">
-      <TodoList />
-    </div>
+    
+    <TodoList />
 
     {/* <MainComponent />
     <App /> */}
