@@ -24,8 +24,17 @@ const TodoList = () => {
   }
   
   const [formData, setFormData] = React.useState({
-    title: ''
+    title: '',
+    isFinished: false
   })
+
+  const handleChangeStatus = (event) => {
+    const {name, type, value} = event.target
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value === 'on'
+    }))
+  }
 
   const handleSubmitAddTaskForm = (event) => {
     event.preventDefault()
@@ -38,11 +47,14 @@ const TodoList = () => {
       return [...prevTasks, {
         taskId: prevTasks.length + 1,
         title: formData.title,
-        isFinished: false
+        isFinished: formData.isFinished
       }]
     })
 
-    setFormData({title: ''})
+    setFormData({
+      title: '',
+      isFinished: false
+    })
   }
 
   const handleChangeAddTask = (event) => {
@@ -110,6 +122,16 @@ const TodoList = () => {
               onChange={handleChangeAddTask}
               className="default-input"
             />
+          </div>
+          <div className="form-input">
+            <input
+              type="checkbox"
+              name="isFinished"
+              checked={formData.isFinished}
+              id="isFinished"
+              onChange={handleChangeStatus}
+            />
+            <label htmlFor="isFinished">Task Status</label>
           </div>
           <button
             className="add-task-btn"
