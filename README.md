@@ -2,7 +2,7 @@
 
 This TODO App was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-![TODO React App](https://i.ibb.co/Hgcymx0/Screen-Shot-2022-02-13-at-22-19-17.png)
+![TODO React App](https://i.postimg.cc/j2Dr25tM/Screen-Shot-2022-02-15-at-18-32-50.png)
 
 ## Available Scripts
 
