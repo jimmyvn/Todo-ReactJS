@@ -7,13 +7,22 @@ import {
   getDoc,
   addDoc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  query,
+  orderBy,
+  limit
 } from 'firebase/firestore'
-import { Button, Input, Checkbox } from "antd"
+import {
+  Form,
+  Button,
+  Input,
+  Checkbox
+} from "antd"
 
 const TodoList = () => {
   const [tasksList, setTasksList] = React.useState([])
   const tasksRef = collection(db, "tasks")
+  const [form] = Form.useForm()
 
   const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false);
 
@@ -21,7 +30,8 @@ const TodoList = () => {
     console.log('Effect Hook has ran')
 
     const getTasks = async () => {
-      const data = await getDocs(tasksRef)
+      const tasksQuery = query(tasksRef, orderBy('createdAt', 'asc'), limit(10))
+      const data = await getDocs(tasksQuery)
       setTasksList(data.docs.map((task) => ({
         ...task.data(),
         id: task.id
@@ -55,7 +65,7 @@ const TodoList = () => {
     })
   }
 
-  const handleTaskStatus = async (id) => {
+  const handleTaskStatusFinished = async (id) => {
     console.log('The task status is saving')
     setTasksList(prevTasks => {
       return prevTasks.map(prevTask => {
@@ -67,33 +77,21 @@ const TodoList = () => {
     const taskDoc = await getDoc(taskDocRef)
     
     await updateDoc(taskDocRef, {
-      status: !taskDoc.status,
+      status: !taskDoc.data().status,
       updatedAt: new Date().toISOString()
     }).then(() => {
       console.log('The task status has been saved')
+    }).catch((error) => {
+      console.log(error)
     })
-  }
-  
-  const [formData, setFormData] = React.useState({
-    title: '',
-    status: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  })
-
-  const handleChangeStatus = (event) => {
-    const {name} = event.target
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: !prevFormData.status,
-      updatedAt: new Date().toISOString()
-    }))
   }
 
   const handleSubmitAddTaskForm = async (event) => {
     event.preventDefault()
 
-    if (formData.title.length === 0) {
+    const formData = form.getFieldsValue();
+
+    if (formData.title === undefined) {
       console.log('The title must be not empty')
       return
     }
@@ -102,6 +100,7 @@ const TodoList = () => {
 
     await addDoc(tasksRef, {
       ...formData,
+      status: formData.status !== undefined ? formData.status : false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }).then((doc) => {
@@ -109,27 +108,14 @@ const TodoList = () => {
         return [...prevTasks, {
           id: doc.id,
           title: formData.title,
-          status: formData.status,
           createdAt: formData.createdAt,
           updatedAt: formData.updatedAt,
         }]
       })
       setAddTaskButtonLoading(false)
     })
-
-    setFormData({
-      title: '',
-      status: false
-    })
-  }
-
-  const handleChangeTitle = (event) => {
-    const {name, value} = event.target
-
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }))
+    
+    form.resetFields();
   }
 
   const handleRemoveTask = async (id) => {
@@ -154,20 +140,20 @@ const TodoList = () => {
         </div>
         <div className="task-title form-input">
           <Input
-              placeholder="Task Title"
-              bordered={false}
-              value={task.title}
-              id={task.id}
-              onChange={handleChangeTaskTitle}
-              onBlur={() => handleBlurTaskTitle(task.id, task.title)}
-            />
+            placeholder="Task Title"
+            bordered={false}
+            value={task.title}
+            id={task.id}
+            onChange={handleChangeTaskTitle}
+            onBlur={() => handleBlurTaskTitle(task.id, task.title)}
+          />
         </div>
         <div className="task-status">
           <Checkbox
             name="status"
             id={`custom-checkbox-${task.id}`}
             checked={task.status}
-            onChange={() => handleTaskStatus(task.id)}
+            onChange={() => handleTaskStatusFinished(task.id)}
           >
           </Checkbox>
         </div>
@@ -180,36 +166,36 @@ const TodoList = () => {
 
       {tasksList.length > 0 ? tasksListELements : <p>You're all caught up</p> }
       
-      <div className="add-task">
-        <form onSubmit={handleSubmitAddTaskForm}>
-          <div className="form-input">
-            <label htmlFor="title" className="required">Task Title</label>
-            <Input
-              placeholder="Task title"
-              name="title"
-              value={formData.title}
-              allowClear
-              onChange={handleChangeTitle}
-            />
-          </div>
-          <div className="form-input">
-            <Checkbox
-              name="status"
-              checked={formData.status}
-              onChange={handleChangeStatus}
-            >
-              Status
-            </Checkbox>
-          </div>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={addTaskButtonLoading}
-          >
-            Add Task
-          </Button>
-        </form>
-      </div>
+      <Form
+        form={form}
+        name="add-task"
+        layout="vertical"
+        initialValues={{ remember: true }}
+        onSubmitCapture={handleSubmitAddTaskForm}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="Task title"
+          name="title"
+          rules={[{ required: true, message: 'Please provide the title!' }]}
+        >
+          <Input allowClear/>
+        </Form.Item>
+        <Form.Item
+          label="Task status"
+          name="status"
+          valuePropName="checked"
+        >
+          <Checkbox>Status</Checkbox>
+        </Form.Item>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={addTaskButtonLoading}
+        >
+          Add Task
+        </Button>
+      </Form>
     </div>
   )
 }
