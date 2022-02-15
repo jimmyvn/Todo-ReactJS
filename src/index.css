@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;1,300&display=swap');
+@import '~antd/dist/antd.css';
 
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -46,6 +45,7 @@ code {
   display: flex;
   list-style: none;
   gap: 20px;
+  margin-bottom: 0;
 }
 
 .navbar .nav-items .nav-item-link {

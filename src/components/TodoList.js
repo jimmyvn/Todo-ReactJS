@@ -9,10 +9,13 @@ import {
   updateDoc,
   deleteDoc
 } from 'firebase/firestore'
+import { Button, Input, Checkbox } from "antd"
 
 const TodoList = () => {
   const [tasksList, setTasksList] = React.useState([])
   const tasksRef = collection(db, "tasks")
+
+  const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false);
 
   React.useEffect(() => {
     console.log('Effect Hook has ran')
@@ -95,6 +98,8 @@ const TodoList = () => {
       return
     }
 
+    setAddTaskButtonLoading(true)
+
     await addDoc(tasksRef, {
       ...formData,
       createdAt: new Date().toISOString(),
@@ -109,6 +114,7 @@ const TodoList = () => {
           updatedAt: formData.updatedAt,
         }]
       })
+      setAddTaskButtonLoading(false)
     })
 
     setFormData({
@@ -147,22 +153,23 @@ const TodoList = () => {
           </a>
         </div>
         <div className="task-title form-input">
-          <input
-            type="text"
-            value={task.title}
-            className="task-input default-input"
-            id={task.id}
-            onChange={handleChangeTaskTitle}
-            onBlur={() => handleBlurTaskTitle(task.id, task.title)}
-          />
+          <Input
+              placeholder="Task Title"
+              bordered={false}
+              value={task.title}
+              id={task.id}
+              onChange={handleChangeTaskTitle}
+              onBlur={() => handleBlurTaskTitle(task.id, task.title)}
+            />
         </div>
         <div className="task-status">
-          <input
-            type="checkbox"
-            checked={task.status}
+          <Checkbox
+            name="status"
             id={`custom-checkbox-${task.id}`}
+            checked={task.status}
             onChange={() => handleTaskStatus(task.id)}
-          />
+          >
+          </Checkbox>
         </div>
       </div>
     )
@@ -177,31 +184,30 @@ const TodoList = () => {
         <form onSubmit={handleSubmitAddTaskForm}>
           <div className="form-input">
             <label htmlFor="title" className="required">Task Title</label>
-            <input
-              type="text"
+            <Input
+              placeholder="Task title"
               name="title"
               value={formData.title}
+              allowClear
               onChange={handleChangeTitle}
-              className="default-input"
             />
           </div>
           <div className="form-input">
-            <input
-              type="checkbox"
+            <Checkbox
               name="status"
               checked={formData.status}
-              id="status"
               onChange={handleChangeStatus}
-            />
-            <label htmlFor="status">
-              Task Status
-            </label>
+            >
+              Status
+            </Checkbox>
           </div>
-          <button
-            className="btn btn-secondary"
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={addTaskButtonLoading}
           >
             Add Task
-          </button>
+          </Button>
         </form>
       </div>
     </div>

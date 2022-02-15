@@ -9,9 +9,7 @@ const firebaseConfig = {
   messagingSenderId: "712578823757",
   appId: process.env.REACT_APP_FIREBASE_MSG_SENDER_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
-};
-
-console.log('fdsa');
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)

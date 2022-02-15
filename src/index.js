@@ -11,8 +11,8 @@ ReactDOM.render(
   <React.StrictMode>
     <Navbar />
     <TodoList />
-    <MainComponent />
-    {/* <App /> */}
+    {/* <MainComponent />
+    <App /> */}
 
     <Footer />
   </React.StrictMode>,
