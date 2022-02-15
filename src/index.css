@@ -214,3 +214,12 @@ label.required:after {
   margin-left: 6px;
   color: red;
 }
+
+.spin-loading-center {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  background: rgb(255 255 255);
+  border-radius: 4px;
+}

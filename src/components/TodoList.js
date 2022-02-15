@@ -16,26 +16,30 @@ import {
   Form,
   Button,
   Input,
-  Checkbox
+  Checkbox,
+  Spin,
+  Empty
 } from "antd"
 
 const TodoList = () => {
   const [tasksList, setTasksList] = React.useState([])
   const tasksRef = collection(db, "tasks")
   const [form] = Form.useForm()
-
   const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false);
+  const [isLoadingTaskList, setIsLoadingTaskList] = React.useState(true);
 
   React.useEffect(() => {
     console.log('Effect Hook has ran')
 
     const getTasks = async () => {
       const tasksQuery = query(tasksRef, orderBy('createdAt', 'asc'), limit(10))
-      const data = await getDocs(tasksQuery)
-      setTasksList(data.docs.map((task) => ({
-        ...task.data(),
-        id: task.id
-      })))
+      await getDocs(tasksQuery).then((data) => {
+        setIsLoadingTaskList(false)
+        setTasksList(data.docs.map((task) => ({
+          ...task.data(),
+          id: task.id
+        })))
+      })
     }
 
     getTasks()
@@ -107,6 +111,7 @@ const TodoList = () => {
       setTasksList(prevTasks => {
         return [...prevTasks, {
           id: doc.id,
+          status: formData.status,
           title: formData.title,
           createdAt: formData.createdAt,
           updatedAt: formData.updatedAt,
@@ -163,8 +168,15 @@ const TodoList = () => {
   
   return (
     <div className="todo-list-parent">
-
-      {tasksList.length > 0 ? tasksListELements : <p>You're all caught up</p> }
+      {
+        isLoadingTaskList === true
+          ?
+          <div className="spin-loading-center">
+            <Spin />
+          </div>
+          :
+          tasksListELements.length ? tasksListELements : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      }
       
       <Form
         form={form}
@@ -173,6 +185,7 @@ const TodoList = () => {
         initialValues={{ remember: true }}
         onSubmitCapture={handleSubmitAddTaskForm}
         autoComplete="off"
+        style={{ paddingTop: "20px" }}
       >
         <Form.Item
           label="Task title"
