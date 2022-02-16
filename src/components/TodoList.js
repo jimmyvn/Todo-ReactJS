@@ -1,16 +1,11 @@
 import React from "react"
 import { db } from '../configs/firebase'
 import {
-  collection,
   doc,
-  getDocs,
   getDoc,
   addDoc,
   updateDoc,
   deleteDoc,
-  query,
-  orderBy,
-  limit
 } from 'firebase/firestore'
 import {
   Form,
@@ -21,39 +16,23 @@ import {
   Empty
 } from "antd"
 import TaskItem from "./TaskItem"
+import { TodoContext } from "../context/TodoProvider"
 
 const TodoList = () => {
-  const [tasksList, setTasksList] = React.useState([])
-  const tasksRef = collection(db, "tasks")
+  const { tasksList, setTasksList } = React.useContext(TodoContext)
+  const { isLoadingTaskList, setIsLoadingTaskList } = React.useContext(TodoContext)
+  const { tasksRef } = React.useContext(TodoContext)
   const [form] = Form.useForm()
   const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false)
-  const [isLoadingTaskList, setIsLoadingTaskList] = React.useState(true)
-
-  React.useEffect(() => {
-    console.log('Effect Hook has ran')
-
-    const getTasks = async () => {
-      const tasksQuery = query(tasksRef, orderBy('createdAt', 'asc'), limit(10))
-      await getDocs(tasksQuery).then((data) => {
-        setIsLoadingTaskList(false)
-        setTasksList(data.docs.map((task) => ({
-          ...task.data(),
-          id: task.id
-        })))
-      })
-    }
-
-    getTasks()
-  }, [])
 
   console.log(tasksList)
 
   const handleChangeTaskTitle = (event) => {
-    const {value, id} = event.target
+    const { value, id } = event.target
 
     setTasksList(prevTasks => {
       return prevTasks.map(prevTask => {
-        return prevTask.id === id ? {...prevTask, title: value} : prevTask
+        return prevTask.id === id ? { ...prevTask, title: value } : prevTask
       })
     })
   }
@@ -74,13 +53,13 @@ const TodoList = () => {
     console.log('The task status is saving')
     setTasksList(prevTasks => {
       return prevTasks.map(prevTask => {
-        return prevTask.id == id ? {...prevTask, status: !prevTask.status} : prevTask
+        return prevTask.id == id ? { ...prevTask, status: !prevTask.status } : prevTask
       })
     })
 
     const taskDocRef = doc(db, 'tasks', id)
     const taskDoc = await getDoc(taskDocRef)
-    
+
     await updateDoc(taskDocRef, {
       status: !taskDoc.data().status,
       updatedAt: new Date().toISOString()
@@ -144,7 +123,7 @@ const TodoList = () => {
       />
     )
   })
-  
+
   return (
     <div className="todo-list-parent" style={{ marginTop: "20px" }}>
       {
@@ -156,7 +135,7 @@ const TodoList = () => {
           :
           tasksListELements.length ? tasksListELements : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       }
-      
+
       <Form
         form={form}
         name="add-task"
@@ -171,7 +150,7 @@ const TodoList = () => {
           name="title"
           rules={[{ required: true, message: 'Please provide the title!' }]}
         >
-          <Input allowClear/>
+          <Input allowClear />
         </Form.Item>
         <Form.Item
           label="Task status"
