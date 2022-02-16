@@ -146,7 +146,7 @@ const TodoList = () => {
   })
   
   return (
-    <div className="todo-list-parent">
+    <div className="todo-list-parent" style={{ marginTop: "20px" }}>
       {
         isLoadingTaskList === true
           ?

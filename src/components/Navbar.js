@@ -1,30 +1,29 @@
 import Logo from '../images/to-do-list.png'
+import { Menu } from 'antd'
 
 const Navbar = () => {
   return (
-    <nav className="navbar">
-      <div className="left-navbar">
-        <img src={Logo} className="navbar-icon" alt="Todo list" />
-        <span className="brand-name">TODO List</span>
-      </div>
-      <ul className="nav-items">
-        <li className="nav-list-item">
-          <a href="#" className="nav-item-link">
-            Pricing
-          </a>
-        </li>
-        <li className="nav-list-item">
-          <a href="#" className="nav-item-link">
-            About
-          </a>
-        </li>
-        <li className="nav-list-item">
-          <a href="#" className="nav-item-link">
-            Contact
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <Menu mode="horizontal">
+      <Menu.Item key="mail">
+        <img src={ Logo } width="30px" alt="Todo app" />
+        TODO List
+      </Menu.Item>
+      <Menu.Item key="pricing">
+        <a href="#" rel="noopener noreferrer">
+          Pricing
+        </a>
+      </Menu.Item>
+      <Menu.Item key="about">
+        <a href="#" rel="noopener noreferrer">
+          About
+        </a>
+      </Menu.Item>
+      <Menu.Item key="contact">
+        <a href="#" rel="noopener noreferrer">
+          Contact
+        </a>
+      </Menu.Item>
+    </Menu>
   )
 }
 
