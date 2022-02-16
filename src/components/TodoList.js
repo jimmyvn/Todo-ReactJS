@@ -20,13 +20,14 @@ import {
   Spin,
   Empty
 } from "antd"
+import TaskItem from "./TaskItem"
 
 const TodoList = () => {
   const [tasksList, setTasksList] = React.useState([])
   const tasksRef = collection(db, "tasks")
   const [form] = Form.useForm()
-  const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false);
-  const [isLoadingTaskList, setIsLoadingTaskList] = React.useState(true);
+  const [addTaskButtonLoading, setAddTaskButtonLoading] = React.useState(false)
+  const [isLoadingTaskList, setIsLoadingTaskList] = React.useState(true)
 
   React.useEffect(() => {
     console.log('Effect Hook has ran')
@@ -93,9 +94,9 @@ const TodoList = () => {
   const handleSubmitAddTaskForm = async (event) => {
     event.preventDefault()
 
-    const formData = form.getFieldsValue();
+    const formData = form.getFieldsValue()
 
-    if (formData.title === undefined) {
+    if (formData.title === undefined || formData.title === '') {
       console.log('The title must be not empty')
       return
     }
@@ -118,51 +119,29 @@ const TodoList = () => {
         }]
       })
       setAddTaskButtonLoading(false)
+      form.resetFields()
     })
-    
-    form.resetFields();
   }
 
   const handleRemoveTask = async (id) => {
     const taskDocument = doc(db, 'tasks', id)
-    await deleteDoc(taskDocument)
-
-    setTasksList(prevTasks => {
-      return prevTasks.filter(task => task.id !== id)
+    await deleteDoc(taskDocument).then(() => {
+      setTasksList(prevTasks => {
+        return prevTasks.filter(task => task.id !== id)
+      })
     })
   }
 
   const tasksListELements = tasksList.map((task) => {
     return (
-      <div className="task-item" key={task.id}>
-        <div className="remove-task">
-          <a
-            href="#"
-            onClick={() => handleRemoveTask(task.id)}
-          >
-            x
-          </a>
-        </div>
-        <div className="task-title form-input">
-          <Input
-            placeholder="Task Title"
-            bordered={false}
-            value={task.title}
-            id={task.id}
-            onChange={handleChangeTaskTitle}
-            onBlur={() => handleBlurTaskTitle(task.id, task.title)}
-          />
-        </div>
-        <div className="task-status">
-          <Checkbox
-            name="status"
-            id={`custom-checkbox-${task.id}`}
-            checked={task.status}
-            onChange={() => handleTaskStatusFinished(task.id)}
-          >
-          </Checkbox>
-        </div>
-      </div>
+      <TaskItem
+        key={task.id}
+        task={task}
+        handleChangeTaskTitle={handleChangeTaskTitle}
+        handleTaskStatusFinished={() => handleTaskStatusFinished(task.id)}
+        handleBlurTaskTitle={() => handleBlurTaskTitle(task.id, task.title)}
+        handleRemoveTask={() => handleRemoveTask(task.id)}
+      />
     )
   })
   
